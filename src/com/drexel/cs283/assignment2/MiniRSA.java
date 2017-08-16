@@ -1,10 +1,11 @@
 package com.drexel.cs283.assignment2;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 import java.lang.Math;
-
+import java.util.stream.Collectors;
 
 
 public class MiniRSA {
@@ -217,8 +218,28 @@ public class MiniRSA {
         return result;
     }
 
-    public static String encrpytString(String aString, HashMap<String, Long> withKeys){
-     return null;
+    public static String encrpytString(String s, HashMap<String, Long> withKeys){
+        char[] characters = s.toCharArray();
+        long[] encryptedInts = new long[characters.length];
+        for(int i = 0 ; i < characters.length ; i++){
+            encryptedInts[i] = endecrypt(characters[i], withKeys.get("c"), withKeys.get("d")).longValue();
+        }
+        String result = Arrays.stream(encryptedInts)
+                .mapToObj(String::valueOf)
+                .collect(Collectors.joining(""));
+        return result;
+    }
+
+    public static String decryptString(String s, HashMap<String, Long> withKeys){
+        char[] characters = s.toCharArray();
+        long[] encryptedInts = new long[characters.length];
+        for(int i = 0 ; i < characters.length ; i++){
+            encryptedInts[i] = endecrypt(characters[i], withKeys.get("c"), withKeys.get("d")).longValue();
+        }
+        String result = Arrays.stream(encryptedInts)
+                .mapToObj(String::valueOf)
+                .collect(Collectors.joining(""));
+        return result;
     }
 
     public static void main(String[] args) {
@@ -227,23 +248,8 @@ public class MiniRSA {
         System.out.println("p: " + p + " q: " + q);
         //Create keys from two primes
         HashMap<String, Long> keys = keysFromPrimes(p, q);
-        System.out.println(keys);
 
-        //message to encrypt/decrypt
-        char ch = 'c';
-        long chtoi = ((long) ch);
-        System.out.println(chtoi);
-
-        long c = keys.get("c");
-        long d = keys.get("d");
-        long e = keys.get("e");
-
-        //encrypt
-        BigInteger encrypted = endecrypt(chtoi, e, c);
-        System.out.println(encrypted);
-        //decrypt
-        BigInteger decrypted = endecrypt(encrypted.longValue(), d, c);
-        System.out.println((char) decrypted.intValue());
+        String s = encrpytString("This is a string", keys);
     }
 }
 
