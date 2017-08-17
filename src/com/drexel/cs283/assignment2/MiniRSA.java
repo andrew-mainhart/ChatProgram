@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 
 public class MiniRSA {
 
-    public static long coprime(long c, long m) {
+    private static long coprime(long c, long m) {
         long e;
         for (e = 2 * m; ; ++e) {
             if (!is_prime(e) && GCD(e, c) == 1 && GCD(e, m) == 1 && e % m != 1) break;
@@ -19,7 +19,7 @@ public class MiniRSA {
         return e;
     }
 
-    public static HashMap<String, Long> keysFromPrimes(long a, long b) {
+    private static HashMap<String, Long> keysFromPrimes(long a, long b) {
         long c = a * b;
         long m = (a - 1) * (b - 1);
 
@@ -33,7 +33,7 @@ public class MiniRSA {
         return keys;
     }
 
-    public static boolean is_prime(long n) {
+    private static boolean is_prime(long n) {
         if (n <= 1) return false;
         else if (n <= 3) return true;
         else if (n % 2 == 0 || n % 3 == 0) return false;
@@ -43,27 +43,26 @@ public class MiniRSA {
         return true;
     }
 
-    public static void completeKeys(HashMap<String, Long> keys) {
-        if (!keys.containsKey("c")) return;
-        if (keys.containsKey("e")) {
-            long c = keys.get("c");
-            long e = keys.get("e");
+    public static void completeKeys(Keys keys) {
+        if (keys.getSharedKey() == 0) return;
+        if (keys.getPrivateKey() == 0) {
+            long c = keys.getSharedKey();
+            long e = keys.getPublicKey();
 
             long m = totient(c);
             long d = mod_inverse(e, m);
 
-            keys.put("d", d);
-            return;
-        } else if (keys.containsKey("d")) {
-            long c = keys.get("c");
-            long d = keys.get("d");
+            keys.setPrivateKey(d);
+
+        } else if (keys.getPublicKey() == 0) {
+            long c = keys.getSharedKey();
+            long d = keys.getPrivateKey();
 
             long m = totient(c);
             long e = mod_inverse(d, m);
 
-            keys.put("e", e);
-            return;
-        } else return;
+            keys.setPublicKey(e);
+        }
     }
 
     public static BigInteger endecrypt(long msg_or_cipher, long key, long c) {
@@ -221,6 +220,8 @@ public class MiniRSA {
 
     public static String encryptString(String s, Keys withKeys){
 
+        if(s.equals("")) return "";
+
         long key = withKeys.getPublicKey();
         long c = withKeys.getSharedKey();
 
@@ -236,6 +237,8 @@ public class MiniRSA {
     }
 
     public static String decryptString(String s, Keys withKeys){
+
+        if(s.equals("")) return "";
 
         long key = withKeys.getPrivateKey();
         long c = withKeys.getSharedKey();
