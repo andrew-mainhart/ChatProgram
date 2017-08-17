@@ -11,6 +11,8 @@ import java.util.stream.IntStream;
 
 public class MiniRSA {
 
+    //coprime static method
+    //takes two longs, returns a number that is coprime to both
     private static long coprime(long c, long m) {
         long e;
         for (e = 2 * m; ; ++e) {
@@ -19,6 +21,9 @@ public class MiniRSA {
         return e;
     }
 
+    //keysFromPrimes static method
+    //takes two prime longs
+    //returns map including shared key "c", public key "e", and private key "d"
     private static HashMap<String, Long> keysFromPrimes(long a, long b) {
         long c = a * b;
         long m = (a - 1) * (b - 1);
@@ -33,6 +38,8 @@ public class MiniRSA {
         return keys;
     }
 
+    //is_prime static method
+    //takes long, returns if prime
     private static boolean is_prime(long n) {
         if (n <= 1) return false;
         else if (n <= 3) return true;
@@ -43,6 +50,10 @@ public class MiniRSA {
         return true;
     }
 
+    //completeKeys static method
+    //takes in Keys object, fills it out
+    //used for cracking keys, works when missing private or public key
+    //needs shared key
     public static void completeKeys(Keys keys) {
         if (keys.getSharedKey() == 0) return;
         if (keys.getPrivateKey() == 0) {
@@ -65,11 +76,17 @@ public class MiniRSA {
         }
     }
 
+    //endecrypt static method
+    //takes a character as a long to endecrypt (maybe encrypted)
+    //takes private or public key
+    //takes shared key
+    //returns BigInteger
     private static BigInteger endecrypt(long msg_or_cipher, long key, long c) {
         BigInteger pow = BigInteger.valueOf(msg_or_cipher);
         return pow.modPow(BigInteger.valueOf(key), BigInteger.valueOf(c));
     }
 
+//    slowest
 //    public static int nthPrime(int n) {
 //        int candidate, count;
 //        for (candidate = 2, count = 0; count < n; ++candidate) {
@@ -79,7 +96,8 @@ public class MiniRSA {
 //        }
 //        return candidate - 1;
 //    }
-//
+
+//    slow
 //    private static boolean isPrime(int n) {
 //        if (n % 2 == 0) return n == 2;
 //        if (n % 3 == 0) return n == 3;
@@ -92,6 +110,8 @@ public class MiniRSA {
 //        return true;
 //    }
 
+//    stack overflow - fast
+//    by Daniel Fischer
 //    public static int nthPrime(int n) {
 //        if (n < 2) return 2;
 //        if (n == 2) return 3;
@@ -118,7 +138,9 @@ public class MiniRSA {
 //        return 2*p+1;
 //    }
 
-    //stack overflow fast - needs explanation
+    //stack overflow - fastest
+    //by Daniel Fischer
+    //takes int n, returns nth prime number
     private static int nthPrime(int n) {
         if (n < 2) return 2;
         if (n == 2) return 3;
@@ -181,7 +203,8 @@ public class MiniRSA {
         return 3 * (p + (i << 5)) + 7 + (p & 1);
     }
 
-    // Count number of set bits in an int
+    //Count number of set bits in an int
+    //used by Daniel Fischer in fastest nthPrime function
     private static int popCount(int n) {
         n -= (n >>> 1) & 0x55555555;
         n = ((n >>> 2) & 0x33333333) + (n & 0x33333333);
@@ -189,6 +212,8 @@ public class MiniRSA {
         return (n * 0x01010101) >> 24;
     }
 
+    //GCD static method
+    //takes two longs, returns the GCD of them
     private static long GCD(long a, long b) {
         if (a == 0) {
             return b;
@@ -196,6 +221,9 @@ public class MiniRSA {
         return GCD(b % a, a);
     }
 
+    //mod_inverse static method
+    //takes long base, long m
+    //returns the inverse mod of base (mod m)
     private static long mod_inverse(long base, long m) {
         base = base % m;
         for (long x = 1; x < m; x++)
@@ -204,10 +232,13 @@ public class MiniRSA {
         return 0;
     }
 
+    //modulo function not used since java has % operator
     private static long modulo(long a, long b, long c) {
         return (long) (Math.pow(a, b) % c);
     }
 
+    //totient static method
+    //takes long, returns the totient of it
     private static long totient(long n) {
         long result = 1;
         for (long i = 2; i < n; ++i) {
@@ -218,6 +249,9 @@ public class MiniRSA {
         return result;
     }
 
+    //encryptString static method
+    //takes a string and Keys
+    //returns the encrypted string, representing encrypted longs separated by spaces
     public static String encryptString(String s, Keys withKeys){
 
         if(s.equals("")) return "";
@@ -236,6 +270,9 @@ public class MiniRSA {
         return result;
     }
 
+    //decryptString static method
+    //takes a string and Keys
+    //returns the decrypted string
     public static String decryptString(String s, Keys withKeys){
 
         if(s.equals("")) return "";
@@ -251,6 +288,8 @@ public class MiniRSA {
         return new String(decryptedCharacters);
     }
 
+    //generateNewKeys static method
+    //returns random keys, generates primes randomly (300-400 and 400-500th prime)
     public static Keys generateNewKeys(){
 
         int r1 = (int) ((Math.random() * 100) + 300);
@@ -267,6 +306,19 @@ public class MiniRSA {
         ret.setPrivateKey(keys.get("d"));
 
         return ret;
+    }
+
+    public static void main(String[] args){
+        //BRUTE-FORCE CRACK
+        Keys keys = generateNewKeys();
+        //if, for some reason, the keys don't have a private key
+        keys.setPrivateKey(0);
+        System.out.println(keys.getPrivateKey()); //0
+        //now we're emulating a situation where you only have the public and shared key
+        //you want to find the private key
+        MiniRSA.completeKeys(keys);
+        //the completeKeys method finds the private key and places it in our keys object
+        System.out.println(keys.getPrivateKey()); //some long
     }
 }
 
