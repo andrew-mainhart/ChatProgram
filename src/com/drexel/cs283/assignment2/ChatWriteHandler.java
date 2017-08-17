@@ -13,10 +13,9 @@ public class ChatWriteHandler implements Runnable, Callerback {
     private ArrayList<Callback> callbacks;
     private boolean chatEnded = false;
 
-    public ChatWriteHandler(BufferedWriter out, String descriptor) {
+    public ChatWriteHandler(BufferedWriter out) {
 
         this.out = out;
-        this.descriptor = descriptor;
         this.callbacks = new ArrayList<Callback>();
     }
 

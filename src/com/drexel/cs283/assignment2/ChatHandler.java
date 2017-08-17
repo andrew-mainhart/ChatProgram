@@ -6,33 +6,40 @@ import java.net.Socket;
 public class ChatHandler implements Runnable, Callback {
 
     private Socket socket;
+    private String username;
 
     private ChatReadHandler readHandler;
     private ChatWriteHandler writeHandler;
 
 
-    public ChatHandler(Socket socket) {
+    public ChatHandler(Socket socket, String username) {
         this.socket = socket;
+        this.username = username;
     }
 
     @Override
     public void run() {
 
         try {
+
+            /*
             String socketDescriptor = "" + socket.getPort();
             System.out.println("Accepted Chat on Port: " + socketDescriptor);
+            */
 
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
             Handshake handshake = doHandshake(in, out);
 
+            System.out.println("Connected to: " + handshake.getUsername());
+
             readHandler = new ChatReadHandler(in, handshake.getUsername());
             readHandler.registerCallback(this);
             Thread readThread = new Thread(readHandler);
             readThread.start();
 
-            writeHandler = new ChatWriteHandler(out, socketDescriptor);
+            writeHandler = new ChatWriteHandler(out);
             writeHandler.registerCallback(this);
             Thread writeThread = new Thread(writeHandler);
             writeThread.start();
@@ -51,7 +58,8 @@ public class ChatHandler implements Runnable, Callback {
 
 
         try {
-            out.write("andrew~1034");
+            String hs = username + "~000000\n";
+            out.write(hs);
             out.flush();
         } catch (Exception e) {
             System.out.println("Failed to write handshake.");
