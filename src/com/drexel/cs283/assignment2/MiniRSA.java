@@ -251,7 +251,7 @@ public class MiniRSA {
         return new String(decryptedCharacters);
     }
 
-    private static Keys generateNewKeys(){
+    public static Keys generateNewKeys(){
 
         int r1 = (int) ((Math.random() * 100) + 300);
         int r2 = (int) ((Math.random() * 100) + 400);
