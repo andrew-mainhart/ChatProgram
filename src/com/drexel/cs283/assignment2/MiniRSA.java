@@ -65,7 +65,7 @@ public class MiniRSA {
         }
     }
 
-    public static BigInteger endecrypt(long msg_or_cipher, long key, long c) {
+    private static BigInteger endecrypt(long msg_or_cipher, long key, long c) {
         BigInteger pow = BigInteger.valueOf(msg_or_cipher);
         return pow.modPow(BigInteger.valueOf(key), BigInteger.valueOf(c));
     }
@@ -119,7 +119,7 @@ public class MiniRSA {
 //    }
 
     //stack overflow fast - needs explanation
-    public static int nthPrime(int n) {
+    private static int nthPrime(int n) {
         if (n < 2) return 2;
         if (n == 2) return 3;
         if (n == 3) return 5;
@@ -182,21 +182,21 @@ public class MiniRSA {
     }
 
     // Count number of set bits in an int
-    public static int popCount(int n) {
+    private static int popCount(int n) {
         n -= (n >>> 1) & 0x55555555;
         n = ((n >>> 2) & 0x33333333) + (n & 0x33333333);
         n = ((n >> 4) & 0x0F0F0F0F) + (n & 0x0F0F0F0F);
         return (n * 0x01010101) >> 24;
     }
 
-    public static long GCD(long a, long b) {
+    private static long GCD(long a, long b) {
         if (a == 0) {
             return b;
         }
         return GCD(b % a, a);
     }
 
-    public static long mod_inverse(long base, long m) {
+    private static long mod_inverse(long base, long m) {
         base = base % m;
         for (long x = 1; x < m; x++)
             if ((base * x) % m == 1)
@@ -204,11 +204,11 @@ public class MiniRSA {
         return 0;
     }
 
-    public static long modulo(long a, long b, long c) {
+    private static long modulo(long a, long b, long c) {
         return (long) (Math.pow(a, b) % c);
     }
 
-    public static long totient(long n) {
+    private static long totient(long n) {
         long result = 1;
         for (long i = 2; i < n; ++i) {
             if (GCD(i, n) == 1) {
@@ -251,7 +251,7 @@ public class MiniRSA {
         return new String(decryptedCharacters);
     }
 
-    public static Keys generateNewKeys(){
+    private static Keys generateNewKeys(){
 
         int r1 = (int) ((Math.random() * 100) + 300);
         int r2 = (int) ((Math.random() * 100) + 400);
@@ -267,17 +267,6 @@ public class MiniRSA {
         ret.setPrivateKey(keys.get("d"));
 
         return ret;
-    }
-
-    public static void main(String[] args) {
-        long p = nthPrime(200);
-        long q = nthPrime(300);
-        System.out.println("p: " + p + " q: " + q);
-        //Create keys from two primes
-        HashMap<String, Long> keys = keysFromPrimes(p, q);
-
-        //String before = encryptString("This is a string", keys.get("d"), keys.get("c"));
-        //String after = decryptString(before, keys.get("e"), keys.get("c"));
     }
 }
 
