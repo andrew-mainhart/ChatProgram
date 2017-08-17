@@ -41,21 +41,24 @@ public class ChatWriteHandler implements Runnable, Callerback {
 
                 userInput = scanner.nextLine();
 
+                String encryptedUserInput = MiniRSA.encryptString(userInput, someOtherUser.getKeys());
+                out.write(encryptedUserInput + "\n");
+                out.flush();
+
                 if (userInput.equals("#quit")) {
                     this.end();
                     doCallbacks(null);
                 }
 
-                String encryptedUserInput = MiniRSA.encryptString(userInput, someOtherUser.getKeys());
-                out.write(encryptedUserInput + "\n");
-                out.flush();
             } catch (SocketException se) {
                 //Ignore these,
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            System.out.print("--> ");
+            if (!chatEnded) {
+                System.out.print("--> ");
+            }
         }
 
         doCallbacks(userInput);

@@ -41,9 +41,8 @@ public class ChatReadHandler implements Runnable, Callerback {
         } catch (SocketException se) {
             //System.out.println("\rSocket has been closed. — Suppressing Error In ReadHandler run()");
         } catch (NullPointerException npe) {
-            System.out.println("\r" + someOtherUser.getUsername() + " has lost connection.");
+            //System.out.println("\r" + someOtherUser.getUsername() + " has lost connection.");
         } catch (Exception e) {
-
             e.printStackTrace();
         }
 
