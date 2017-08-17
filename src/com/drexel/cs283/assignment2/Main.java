@@ -14,12 +14,13 @@ public class Main {
 
 
         if (args.length == 3) {
-            System.out.println("Connecting...");
+            System.out.print("Connecting...");
             String hostname = args[1];
             int portNumber = Integer.parseInt(args[2]);
 
             //If the user specified an argument, it means they want to connect to someone.
             Socket clientSocket = new Socket(hostname, portNumber);
+            System.out.print("\r");
             ChatHandler chatHandler = new ChatHandler(clientSocket, currentUser);
             Thread chatThread = new Thread(chatHandler);
             chatThread.start();

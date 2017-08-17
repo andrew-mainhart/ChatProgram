@@ -1,8 +1,11 @@
 package com.drexel.cs283.assignment2;
 
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -38,13 +41,16 @@ public class ChatWriteHandler implements Runnable, Callerback {
 
                 userInput = scanner.nextLine();
 
-                if(userInput.equals("#quit")) {
+                if (userInput.equals("#quit")) {
                     this.end();
+                    doCallbacks(null);
                 }
 
-                userInput = MiniRSA.encryptString(userInput, someOtherUser.getKeys());
-                out.write(userInput + "\n");
+                String encryptedUserInput = MiniRSA.encryptString(userInput, someOtherUser.getKeys());
+                out.write(encryptedUserInput + "\n");
                 out.flush();
+            } catch (SocketException se) {
+                //Ignore these,
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -52,7 +58,6 @@ public class ChatWriteHandler implements Runnable, Callerback {
             System.out.print("--> ");
         }
 
-        scanner.close();
         doCallbacks(userInput);
     }
 

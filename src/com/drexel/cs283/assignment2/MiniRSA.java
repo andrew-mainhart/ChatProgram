@@ -250,7 +250,6 @@ public class MiniRSA {
 
     public static Keys generateNewKeys(){
 
-        System.out.println("Generating encryption.");
         int r1 = (int) ((Math.random() * 100) + 300);
         int r2 = (int) ((Math.random() * 100) + 400);
 

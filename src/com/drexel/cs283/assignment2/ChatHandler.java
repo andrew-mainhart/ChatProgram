@@ -88,7 +88,7 @@ public class ChatHandler implements Runnable, Callback {
         if (!socket.isClosed()) {
             try {
                 socket.close();
-                System.out.println("Closed Chat on Port: " + socket.getPort());
+                System.out.println("\rClosed Chat with: " + someOtherUser.getUsername());
             } catch (IOException e) {
                 e.printStackTrace();
             }

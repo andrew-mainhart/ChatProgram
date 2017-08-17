@@ -39,7 +39,7 @@ public class ChatReadHandler implements Runnable, Callerback {
             System.out.print("\r");
 
         } catch (SocketException se) {
-            System.out.println("\rSocket has been closed. — Suppressing Error In ReadHandler run()");
+            //System.out.println("\rSocket has been closed. — Suppressing Error In ReadHandler run()");
         } catch (NullPointerException npe) {
             System.out.println("\r" + someOtherUser.getUsername() + " has lost connection.");
         } catch (Exception e) {
@@ -47,7 +47,7 @@ public class ChatReadHandler implements Runnable, Callerback {
             e.printStackTrace();
         }
 
-        doCallbacks(socketInput);
+        doCallbacks(null);
     }
 
     @Override
