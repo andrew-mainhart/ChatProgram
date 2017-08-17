@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.lang.Math;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 public class MiniRSA {
@@ -218,28 +219,25 @@ public class MiniRSA {
         return result;
     }
 
-    public static String encrpytString(String s, HashMap<String, Long> withKeys){
+    public static String encryptString(String s, long key, long c){
         char[] characters = s.toCharArray();
-        long[] encryptedInts = new long[characters.length];
+        long[] encryptedCharacters = new long[characters.length];
         for(int i = 0 ; i < characters.length ; i++){
-            encryptedInts[i] = endecrypt(characters[i], withKeys.get("c"), withKeys.get("d")).longValue();
+            encryptedCharacters[i] = endecrypt(characters[i], key, c).longValue();
         }
-        String result = Arrays.stream(encryptedInts)
+        String result = Arrays.stream(encryptedCharacters)
                 .mapToObj(String::valueOf)
-                .collect(Collectors.joining(""));
+                .collect(Collectors.joining(" "));
         return result;
     }
 
-    public static String decryptString(String s, HashMap<String, Long> withKeys){
-        char[] characters = s.toCharArray();
-        long[] encryptedInts = new long[characters.length];
-        for(int i = 0 ; i < characters.length ; i++){
-            encryptedInts[i] = endecrypt(characters[i], withKeys.get("c"), withKeys.get("d")).longValue();
+    public static String decryptString(String s, long key, long c){
+        String[] encryptedCharacters = s.split(" ");
+        char[] decryptedCharacters = new char[encryptedCharacters.length];
+        for(int i = 0 ; i < encryptedCharacters.length ; i++){
+            decryptedCharacters[i] = (char) endecrypt(Long.parseLong(encryptedCharacters[i]), key, c).longValue();
         }
-        String result = Arrays.stream(encryptedInts)
-                .mapToObj(String::valueOf)
-                .collect(Collectors.joining(""));
-        return result;
+        return new String(decryptedCharacters);
     }
 
     public static void main(String[] args) {
@@ -249,7 +247,8 @@ public class MiniRSA {
         //Create keys from two primes
         HashMap<String, Long> keys = keysFromPrimes(p, q);
 
-        String s = encrpytString("This is a string", keys);
+        String before = encryptString("This is a string", keys.get("d"), keys.get("c"));
+        String after = decryptString(before, keys.get("e"), keys.get("c"));
     }
 }
 
