@@ -9,13 +9,18 @@ import java.util.Scanner;
 public class ChatWriteHandler implements Runnable, Callerback {
 
     private BufferedWriter out;
-    private String descriptor;
+    private User currentUser;
+    private User someOtherUser;
+
     private ArrayList<Callback> callbacks;
     private boolean chatEnded = false;
 
-    public ChatWriteHandler(BufferedWriter out) {
+    public ChatWriteHandler(BufferedWriter out, User currentUser, User someOtherUser) {
 
         this.out = out;
+        this.currentUser = currentUser;
+        this.someOtherUser = someOtherUser;
+
         this.callbacks = new ArrayList<Callback>();
     }
 
@@ -27,8 +32,10 @@ public class ChatWriteHandler implements Runnable, Callerback {
 
         System.out.print("--> ");
 
+        //Encrypt with the other user's keys
         while (!(userInput = scanner.nextLine()).equals("#quit") && !chatEnded) {
             try {
+                userInput = MiniRSA.encryptString(userInput, someOtherUser.getKeys());
                 out.write(userInput + "\n");
                 out.flush();
             } catch (Exception e) {

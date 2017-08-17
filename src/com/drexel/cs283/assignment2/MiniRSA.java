@@ -219,7 +219,11 @@ public class MiniRSA {
         return result;
     }
 
-    public static String encryptString(String s, long key, long c){
+    public static String encryptString(String s, Keys withKeys){
+
+        long key = withKeys.getPublicKey();
+        long c = withKeys.getSharedKey();
+
         char[] characters = s.toCharArray();
         long[] encryptedCharacters = new long[characters.length];
         for(int i = 0 ; i < characters.length ; i++){
@@ -231,13 +235,36 @@ public class MiniRSA {
         return result;
     }
 
-    public static String decryptString(String s, long key, long c){
+    public static String decryptString(String s, Keys withKeys){
+
+        long key = withKeys.getPrivateKey();
+        long c = withKeys.getSharedKey();
+
         String[] encryptedCharacters = s.split(" ");
         char[] decryptedCharacters = new char[encryptedCharacters.length];
         for(int i = 0 ; i < encryptedCharacters.length ; i++){
             decryptedCharacters[i] = (char) endecrypt(Long.parseLong(encryptedCharacters[i]), key, c).longValue();
         }
         return new String(decryptedCharacters);
+    }
+
+    public static Keys generateNewKeys(){
+
+        System.out.println("Generating encryption.");
+        int r1 = (int) ((Math.random() * 100) + 300);
+        int r2 = (int) ((Math.random() * 100) + 400);
+
+        long p = MiniRSA.nthPrime(r1);
+        long q = MiniRSA.nthPrime(r2);
+
+        HashMap<String, Long> keys = keysFromPrimes(p, q);
+
+        Keys ret = new Keys();
+        ret.setSharedKey(keys.get("c"));
+        ret.setPublicKey(keys.get("e"));
+        ret.setPrivateKey(keys.get("d"));
+
+        return ret;
     }
 
     public static void main(String[] args) {
@@ -247,8 +274,8 @@ public class MiniRSA {
         //Create keys from two primes
         HashMap<String, Long> keys = keysFromPrimes(p, q);
 
-        String before = encryptString("This is a string", keys.get("d"), keys.get("c"));
-        String after = decryptString(before, keys.get("e"), keys.get("c"));
+        //String before = encryptString("This is a string", keys.get("d"), keys.get("c"));
+        //String after = decryptString(before, keys.get("e"), keys.get("c"));
     }
 }
 

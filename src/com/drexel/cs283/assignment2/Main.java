@@ -1,15 +1,17 @@
 package com.drexel.cs283.assignment2;
 
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketAddress;
+
 
 public class Main {
 
     public static void main(String[] args) throws Exception {
+
+        User currentUser = new User(args[0], MiniRSA.generateNewKeys());
+
+
 
         if (args.length == 3) {
             System.out.println("Connecting...");
@@ -18,7 +20,7 @@ public class Main {
 
             //If the user specified an argument, it means they want to connect to someone.
             Socket clientSocket = new Socket(hostname, portNumber);
-            ChatHandler chatHandler = new ChatHandler(clientSocket, args[0]);
+            ChatHandler chatHandler = new ChatHandler(clientSocket, currentUser);
             Thread chatThread = new Thread(chatHandler);
             chatThread.start();
             chatThread.join();
@@ -44,7 +46,7 @@ public class Main {
 
             while (true) {
                 Socket socket = serverSocket.accept();
-                ChatHandler chatHandler = new ChatHandler(socket, args[0]);
+                ChatHandler chatHandler = new ChatHandler(socket, currentUser);
                 Thread chatThread = new Thread(chatHandler);
                 chatThread.start();
             }

@@ -6,15 +6,16 @@ import java.net.Socket;
 public class ChatHandler implements Runnable, Callback {
 
     private Socket socket;
-    private String username;
+    private User currentUser;
+    private User someOtherUser;
 
     private ChatReadHandler readHandler;
     private ChatWriteHandler writeHandler;
 
 
-    public ChatHandler(Socket socket, String username) {
+    public ChatHandler(Socket socket, User currentUser) {
         this.socket = socket;
-        this.username = username;
+        this.currentUser = currentUser;
     }
 
     @Override
@@ -31,15 +32,17 @@ public class ChatHandler implements Runnable, Callback {
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
             Handshake handshake = doHandshake(in, out);
+            someOtherUser = handshake.getUser();
 
-            System.out.println("Connected to: " + handshake.getUsername());
 
-            readHandler = new ChatReadHandler(in, handshake.getUsername());
+            System.out.println("Connected to: " + someOtherUser.getUsername());
+
+            readHandler = new ChatReadHandler(in, currentUser, someOtherUser);
             readHandler.registerCallback(this);
             Thread readThread = new Thread(readHandler);
             readThread.start();
 
-            writeHandler = new ChatWriteHandler(out);
+            writeHandler = new ChatWriteHandler(out, currentUser, someOtherUser);
             writeHandler.registerCallback(this);
             Thread writeThread = new Thread(writeHandler);
             writeThread.start();
@@ -58,8 +61,7 @@ public class ChatHandler implements Runnable, Callback {
 
 
         try {
-            String hs = username + "~000000\n";
-            out.write(hs);
+            out.write(currentUser + "\n");
             out.flush();
         } catch (Exception e) {
             System.out.println("Failed to write handshake.");

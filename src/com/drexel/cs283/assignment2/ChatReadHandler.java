@@ -7,14 +7,18 @@ import java.util.ArrayList;
 public class ChatReadHandler implements Runnable, Callerback {
 
     private BufferedReader in;
-    private String descriptor;
+    private User currentUser;
+    private User someOtherUser;
+
     private ArrayList<Callback> callbacks;
     private boolean chatEnded = false;
 
-    public ChatReadHandler(BufferedReader in, String descriptor) {
+    public ChatReadHandler(BufferedReader in, User currentUser, User someOtherUser) {
 
         this.in = in;
-        this.descriptor = descriptor;
+        this.currentUser = currentUser;
+        this.someOtherUser = someOtherUser;
+
         this.callbacks = new ArrayList<Callback>();
 
     }
@@ -26,8 +30,9 @@ public class ChatReadHandler implements Runnable, Callerback {
 
 
         try {
-            while (!(socketInput = in.readLine()).equals("#quit") && !chatEnded) {
-                System.out.println("\r" + descriptor + ": " + socketInput);
+            //Decrypt with current user's keys
+            while (!(socketInput = MiniRSA.decryptString(in.readLine(), currentUser.getKeys())).equals("#quit") && !chatEnded) {
+                System.out.println("\r" + someOtherUser.getUsername() + ": " + socketInput);
                 System.out.print("--> ");
             }
 
@@ -36,7 +41,7 @@ public class ChatReadHandler implements Runnable, Callerback {
         } catch (SocketException se) {
             System.out.println("\rSocket has been closed. — Suppressing Error In ReadHandler run()");
         } catch (NullPointerException npe) {
-            System.out.println("\r" + descriptor + " has lost connection.");
+            System.out.println("\r" + someOtherUser.getUsername() + " has lost connection.");
         } catch (Exception e) {
 
             e.printStackTrace();
