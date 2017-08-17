@@ -33,8 +33,15 @@ public class ChatWriteHandler implements Runnable, Callerback {
         System.out.print("--> ");
 
         //Encrypt with the other user's keys
-        while (!(userInput = scanner.nextLine()).equals("#quit") && !chatEnded) {
+        while (!chatEnded) {
             try {
+
+                userInput = scanner.nextLine();
+
+                if(userInput.equals("#quit")) {
+                    this.end();
+                }
+
                 userInput = MiniRSA.encryptString(userInput, someOtherUser.getKeys());
                 out.write(userInput + "\n");
                 out.flush();
