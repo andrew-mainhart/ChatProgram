@@ -3,10 +3,7 @@ package com.drexel.cs283.assignment2;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Random;
-import java.lang.Math;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 
 public class MiniRSA {
@@ -264,10 +261,9 @@ public class MiniRSA {
         for (int i = 0; i < characters.length; i++) {
             encryptedCharacters[i] = endecrypt(characters[i], key, c).longValue();
         }
-        String result = Arrays.stream(encryptedCharacters)
+        return Arrays.stream(encryptedCharacters)
                 .mapToObj(String::valueOf)
                 .collect(Collectors.joining(" "));
-        return result;
     }
 
     //decryptString static method

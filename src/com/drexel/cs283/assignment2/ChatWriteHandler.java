@@ -1,10 +1,6 @@
 package com.drexel.cs283.assignment2;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
-import java.io.IOException;
-import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -24,7 +20,7 @@ public class ChatWriteHandler implements Runnable, Callerback {
         this.currentUser = currentUser;
         this.someOtherUser = someOtherUser;
 
-        this.callbacks = new ArrayList<Callback>();
+        this.callbacks = new ArrayList<>();
     }
 
     @Override
