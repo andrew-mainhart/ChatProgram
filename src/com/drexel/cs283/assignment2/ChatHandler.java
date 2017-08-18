@@ -31,7 +31,7 @@ public class ChatHandler implements Runnable, Callback {
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
-            Handshake handshake = doHandshake(in, out);
+            Handshake handshake = Handshake.doHandshake(currentUser, in, out);
             someOtherUser = handshake.getUser();
 
 
@@ -56,27 +56,6 @@ public class ChatHandler implements Runnable, Callback {
             e.printStackTrace();
         }
     }
-
-    public Handshake doHandshake(BufferedReader in, BufferedWriter out) {
-
-
-        try {
-            out.write(currentUser + "\n");
-            out.flush();
-        } catch (Exception e) {
-            System.out.println("Failed to write handshake.");
-            return null;
-        }
-
-        try {
-            return new Handshake(in.readLine());
-        } catch (Exception e) {
-            System.out.println("Failed to read handshake.");
-            return null;
-        }
-
-    }
-
 
     @Override
     public void exitChat(String data) {

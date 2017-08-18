@@ -46,7 +46,13 @@ public class ChatReadHandler implements Runnable, Callerback {
             e.printStackTrace();
         }
 
+        boolean kludgeToFixOtherKludge = !chatEnded;
         doCallbacks(null);
+
+        if (kludgeToFixOtherKludge) {
+            System.out.print("Press [Enter] to Acknowledge.");
+        }
+
     }
 
     @Override

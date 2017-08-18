@@ -9,9 +9,14 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
+        if(args.length != 3 && args.length != 1) {
+            System.out.println("Usage: java -jar chat.jar <Your Name> (Hostname to connect to) (Port to connect on)");
+            System.out.println("Port 4000 is used by default, a port will be assigned if 4000 is not available.");
+            System.out.println("Hostname and Port are optional - If not specified, you will act as a server.");
+            return;
+        }
+
         User currentUser = new User(args[0], MiniRSA.generateNewKeys());
-
-
 
         if (args.length == 3) {
             System.out.print("Connecting...");

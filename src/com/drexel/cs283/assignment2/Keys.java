@@ -6,17 +6,17 @@ public class Keys {
     private long publicKey;
     private long privateKey;
 
-    public Keys(){
+    public Keys() {
 
     }
 
-    public Keys(long sharedKey, long publicKey, long privateKey){
+    public Keys(long sharedKey, long publicKey, long privateKey) {
         this.sharedKey = sharedKey;
         this.privateKey = privateKey;
         this.publicKey = publicKey;
     }
 
-    public Keys(long sharedKey, long publicKey){
+    public Keys(long sharedKey, long publicKey) {
         this.sharedKey = sharedKey;
         this.publicKey = publicKey;
     }

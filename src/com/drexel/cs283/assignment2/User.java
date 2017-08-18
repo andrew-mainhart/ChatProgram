@@ -9,11 +9,11 @@ public class User {
 
     }
 
-    public User(String username){
+    public User(String username) {
         this.username = username;
     }
 
-    public User(String username, Keys keys){
+    public User(String username, Keys keys) {
         this.username = username;
         this.keys = keys;
     }
@@ -26,11 +26,11 @@ public class User {
         this.username = username;
     }
 
-    public Keys getKeys(){
+    public Keys getKeys() {
         return keys;
     }
 
-    public void setKeys(Keys keys){
+    public void setKeys(Keys keys) {
         this.keys = keys;
     }
 

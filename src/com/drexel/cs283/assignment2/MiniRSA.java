@@ -252,16 +252,16 @@ public class MiniRSA {
     //encryptString static method
     //takes a string and Keys
     //returns the encrypted string, representing encrypted longs separated by spaces
-    public static String encryptString(String s, Keys withKeys){
+    public static String encryptString(String s, Keys withKeys) {
 
-        if(s.equals("")) return "";
+        if (s.equals("")) return "";
 
         long key = withKeys.getPublicKey();
         long c = withKeys.getSharedKey();
 
         char[] characters = s.toCharArray();
         long[] encryptedCharacters = new long[characters.length];
-        for(int i = 0 ; i < characters.length ; i++){
+        for (int i = 0; i < characters.length; i++) {
             encryptedCharacters[i] = endecrypt(characters[i], key, c).longValue();
         }
         String result = Arrays.stream(encryptedCharacters)
@@ -273,16 +273,16 @@ public class MiniRSA {
     //decryptString static method
     //takes a string and Keys
     //returns the decrypted string
-    public static String decryptString(String s, Keys withKeys){
+    public static String decryptString(String s, Keys withKeys) {
 
-        if(s.equals("")) return "";
+        if (s.equals("")) return "";
 
         long key = withKeys.getPrivateKey();
         long c = withKeys.getSharedKey();
 
         String[] encryptedCharacters = s.split(" ");
         char[] decryptedCharacters = new char[encryptedCharacters.length];
-        for(int i = 0 ; i < encryptedCharacters.length ; i++){
+        for (int i = 0; i < encryptedCharacters.length; i++) {
             decryptedCharacters[i] = (char) endecrypt(Long.parseLong(encryptedCharacters[i]), key, c).longValue();
         }
         return new String(decryptedCharacters);
@@ -290,7 +290,7 @@ public class MiniRSA {
 
     //generateNewKeys static method
     //returns random keys, generates primes randomly (300-400 and 400-500th prime)
-    public static Keys generateNewKeys(){
+    public static Keys generateNewKeys() {
 
         int r1 = (int) ((Math.random() * 100) + 300);
         int r2 = (int) ((Math.random() * 100) + 400);
@@ -308,7 +308,7 @@ public class MiniRSA {
         return ret;
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         //BRUTE-FORCE CRACK
         Keys keys = generateNewKeys();
         //if, for some reason, the keys don't have a private key
